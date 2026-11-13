@@ -27,16 +27,13 @@
 </script>
 <svelte:window onkeydown={keydown} />
 <section class="scramble-page" aria-label="Scramble generator">
-  <p class:error={failed} class="scramble" style:--characters={Math.max(scramble.length, 1)} aria-live="polite" aria-label="3 by 3 scramble">{failed ? 'Couldn’t generate a scramble. Try again.' : scramble}</p>
+  <button type="button" onclick={advance} onkeydown={e => { if (e.repeat && (e.code === 'Space' || e.key === 'Enter')) e.preventDefault(); }} aria-disabled={busy} title="New scramble" class:error={failed} class="scramble" style:--characters={Math.max(scramble.length, 1)} aria-live="polite" aria-label="3 by 3 scramble">{failed ? 'Couldn’t generate a scramble. Try again.' : scramble}</button>
   <span class="counter" aria-label={`Scramble ${count}`}>{count}</span>
-  <button class="quiet next" onclick={advance} disabled={busy}>New scramble <span class="shortcut">space</span></button>
 </section>
 <style>
   .scramble-page { padding:clamp(110px, 24svh, 280px) 24px 40px; text-align:center; container-type:inline-size; }
-  .scramble { margin:0; font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
+  .scramble { -webkit-tap-highlight-color:transparent; appearance:none; display:block; width:100%; border:0; padding:0; background:transparent; margin:0; font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
   .counter { display:block; margin-top:24px; color:var(--muted); font-size:16px; }
-  .next { margin-top:24px; }
-  .shortcut { font-size:12px; margin-left:12px; color:var(--muted); }
   .error { font-size:18px; white-space:normal; }
-  @media (max-width: 767px) { .scramble-page { padding:clamp(90px, 18svh, 160px) 24px 32px; } .scramble { white-space:normal; font-size:24px; overflow-wrap:normal; } .shortcut { display:none; } }
+  @media (max-width: 767px) { .scramble-page { position:relative; min-height:100svh; padding:clamp(90px, 18svh, 160px) 24px 32px; } .scramble::after { content:""; position:absolute; inset:0; } .scramble { white-space:normal; font-size:24px; overflow-wrap:normal; } }
 </style>

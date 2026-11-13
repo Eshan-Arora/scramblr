@@ -17,3 +17,5 @@ input,select { border:1px solid var(--line); border-radius:5px; padding:10px 12p
 .drawer-overlay { position:fixed; inset:0; background:#17261b30; z-index:20; }
 .drawer { position:fixed; inset:0 auto 0 0; width:min(280px,85vw); background:var(--surface); z-index:21; padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); }
 .drawer-close { position:absolute; right:8px; top:14px; width:44px; border:0; background:transparent; font-size:24px; color:var(--muted); }
+
+@media (max-width:767px) { kbd { display:none !important; } }

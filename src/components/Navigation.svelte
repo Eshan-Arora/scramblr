@@ -1,12 +1,24 @@
 <script lang="ts">
-  export type Page = 'scramble' | 'blind' | 'settings';
-  let { current, navigate, modifier }: { current: Page; navigate: (page: Page) => void; modifier: string } = $props();
+  import { pages, type Page } from '../lib/navigation';
+  let { current, navigate, modifier, leave }: { current: Page; navigate: (page: Page, keyboard?: boolean) => void; modifier: string; leave: () => void } = $props();
+  let nav: HTMLElement;
+  export function focus() { nav.querySelector<HTMLButtonElement>('[aria-current="page"]')?.focus(); }
+  function keydown(e: KeyboardEvent) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); leave(); return; }
+    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const index = pages.findIndex(page => page.id === current);
+    const next = e.key === 'Home' ? 0 : e.key === 'End' ? pages.length - 1 : (index + (e.key === 'ArrowDown' ? 1 : -1) + pages.length) % pages.length;
+    navigate(pages[next].id, true);
+    nav.querySelectorAll<HTMLButtonElement>('button')[next]?.focus();
+  }
 </script>
-<nav aria-label="Main navigation">
+<nav bind:this={nav} aria-label="Main navigation">
   <span class="wordmark">scramblr</span>
-  <button class:chosen={current === 'scramble'} aria-current={current === 'scramble' ? 'page' : undefined} onclick={() => navigate('scramble')}>Scramble</button>
-  <button class:chosen={current === 'blind'} aria-current={current === 'blind' ? 'page' : undefined} onclick={() => navigate('blind')}>Blind trainer</button>
-  <button class="settings-link" class:chosen={current === 'settings'} aria-current={current === 'settings' ? 'page' : undefined} onclick={() => navigate('settings')}>Settings <kbd>{modifier},</kbd></button>
+  {#each pages as page}
+    <button onkeydown={keydown} class:settings-link={page.id === 'settings'} class:chosen={current === page.id} aria-current={current === page.id ? 'page' : undefined} onclick={() => navigate(page.id)}>{page.label}{#if page.id === 'settings'}<kbd>{modifier},</kbd>{/if}</button>
+  {/each}
 </nav>
 <style>
   nav { display:flex; flex-direction:column; gap:4px; height:100%; padding:24px 12px; }

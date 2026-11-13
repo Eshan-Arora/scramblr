@@ -8,3 +8,6 @@
 - Keep README.md limited to `scramblr`. Keep product and development guidance here instead of adding prose documentation.
 - Desktop scrambles stay on one line; mobile scrambles wrap at a readable size.
 - The blind trainer quizzes solved-cube sticker positions using Speffz, with configurable orientation (default yellow U / blue F). Correct answers advance immediately; wrong answers reveal the letter briefly before advancing. No stats for now.
+- Sidebar arrow keys switch pages immediately while navigation has focus. Escape returns focus without closing the desktop sidebar. Cmd/Ctrl+K is an unadvertised fuzzy page switcher.
+- Use a fixed open-front cube outline with neutral walls. Shade the target face and show its grid and highlighted sticker; omit all other face grids. Do not show orientation color dots. On mobile, put practice selection behind a three-dot control, hide shortcut hints, and prioritize cube size. Do not detach or mirror faces or rotate between targets.
+- After browser viewport testing, clear device emulation before handing the preview back. Verify the final preview uses the actual desktop window width; never leave a phone-width override on the user’s desktop tab.
