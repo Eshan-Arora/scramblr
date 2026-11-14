@@ -46,14 +46,18 @@
 </script>
 <svelte:window onkeydown={keydown} />
 {#snippet menuIcon()}<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" /></svg>{/snippet}
+{#snippet collapseIcon()}<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 10H4m6-6-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>{/snippet}
 {#if mobile}
   <Dialog.Root bind:open={sidebar}>
     <Dialog.Trigger class="menu-toggle" aria-label="Open sidebar">{@render menuIcon()}</Dialog.Trigger>
-    <Dialog.Portal><Dialog.Overlay class="drawer-overlay" /><Dialog.Content class="drawer" onEscapeKeydown={e => e.preventDefault()}><Dialog.Title class="sr-only">Navigation</Dialog.Title><Dialog.Description class="sr-only">Choose a page</Dialog.Description><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /><Dialog.Close class="drawer-close" aria-label="Close sidebar">×</Dialog.Close></Dialog.Content></Dialog.Portal>
+    <Dialog.Portal><Dialog.Overlay class="drawer-overlay" /><Dialog.Content class="drawer" onEscapeKeydown={e => e.preventDefault()}><Dialog.Title class="sr-only">Navigation</Dialog.Title><Dialog.Description class="sr-only">Choose a page</Dialog.Description><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /><Dialog.Close class="drawer-close" aria-label="Close sidebar">{@render collapseIcon()}</Dialog.Close></Dialog.Content></Dialog.Portal>
   </Dialog.Root>
 {:else}
-  <button class="menu-toggle" class:shifted={sidebar} aria-label={sidebar ? 'Close sidebar' : 'Open sidebar'} aria-expanded={sidebar} title={`${modifier}B`} onclick={toggleSidebar}>{@render menuIcon()}</button>
-  {#if sidebar}<aside><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /></aside>{/if}
+  {#if sidebar}
+    <aside><button class="drawer-close" aria-label="Close sidebar" aria-expanded="true" title={`${modifier}B`} onclick={toggleSidebar}>{@render collapseIcon()}</button><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /></aside>
+  {:else}
+    <button class="menu-toggle" aria-label="Open sidebar" aria-expanded="false" title={`${modifier}B`} onclick={toggleSidebar}>{@render menuIcon()}</button>
+  {/if}
 {/if}
 <main bind:this={main} tabindex="-1" class:with-sidebar={sidebar && !mobile}>
   <div hidden={page !== 'scramble'}><Scramble active={page === 'scramble' && !(mobile && sidebar) && !switcher} /></div>

@@ -56,6 +56,8 @@
   function cancelHold() { held = null; clearTimeout(readyTimeout); if (phase === 'holding' || phase === 'ready') phase = 'idle'; }
   $effect(() => { if (!active) cancelHold(); });
   function keydown(e: KeyboardEvent) {
+    if (active && phase === 'running' && !e.repeat) { e.preventDefault(); cancelHold(); stop(); return; }
+    if (e.key === 'Escape') { cancelHold(); return; }
     if (!active || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.isComposing || isEditing(e.target) || (e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],button:not(.timer)'))) return;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
@@ -80,7 +82,7 @@
   <p class="scramble" style:--characters={Math.max(scramble.length, 1)} aria-label="3 by 3 scramble">{failed ? 'Couldn’t generate a scramble.' : scramble}</p>
   <button class="timer" class:holding={phase === 'holding'} class:ready={phase === 'ready'} data-phase={phase}
     aria-label={phase === 'running' ? 'Stop timer' : `Time ${display}. Hold, then release to start`}
-    onpointerdown={e => { if (!e.isPrimary || e.button !== 0) return; e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId); press('pointer'); }}
+    onpointerdown={e => { if (e.pointerType !== 'touch' || !e.isPrimary || e.button !== 0) return; e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId); press('pointer'); }}
     onpointerup={() => release('pointer')} onpointercancel={cancelHold} onlostpointercapture={() => { if (held === 'pointer') cancelHold(); }} oncontextmenu={e => e.preventDefault()}>{display}</button>
   {#if failed}<button class="quiet" onclick={() => void advance()}>Retry</button>{/if}
 </section>
@@ -89,6 +91,7 @@
   .scramble { margin:0; font-family:var(--font-mono); font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
   .timer { display:block; margin:32px auto 0; padding:12px 24px; border:0; background:transparent; font-family:var(--font); font-size:clamp(64px, 10vw, 112px); font-weight:700; font-variant-numeric:tabular-nums; line-height:1.2; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
   .timer::after { content:''; position:absolute; inset:0; }
+  .timer:focus-visible { outline:none; }
   .holding { color:var(--error); } .ready { color:#24844c; }
   .quiet { position:relative; z-index:1; }
   @media (max-width:767px) { .timer-page { padding:clamp(90px,18svh,160px) 24px 32px; } .scramble { white-space:normal; font-size:24px; } .timer { margin-top:32px; font-size:72px; padding:12px 0; } }
