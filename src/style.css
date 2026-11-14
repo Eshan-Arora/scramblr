@@ -1,4 +1,4 @@
-:root { --font:'Courier New', Courier, monospace; --accent:#174d3b; --accent-soft:#edf4ef; --ink:#1d1f21; --muted:#717771; --line:#e3e7e3; --surface:#fff; --subtle:#f6f7f5; --error:#ad3933; font-family:var(--font); color:var(--ink); background:var(--surface); font-synthesis:none; -webkit-font-smoothing:antialiased; color-scheme:light; }
+:root { --font:'Trebuchet MS', Arial, sans-serif; --font-mono:'Courier New', Courier, monospace; --accent:#174d3b; --accent-soft:#edf4ef; --ink:#1d1f21; --muted:#535e57; --line:#e3e7e3; --surface:#fff; --subtle:#f6f7f5; --error:#ad3933; font-family:var(--font); color:var(--ink); background:var(--surface); font-synthesis:none; -webkit-font-smoothing:auto; color-scheme:light; }
 * { box-sizing:border-box; }
 body { margin:0; }
 button,input,select { font:inherit; color:inherit; }

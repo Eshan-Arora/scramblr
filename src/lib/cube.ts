@@ -4,7 +4,7 @@ export type Mode = 'edges' | 'corners' | 'mixed';
 export type Vec = [number, number, number];
 export const faces: Face[] = ['U', 'L', 'F', 'R', 'B', 'D'];
 export const colors: Color[] = ['white', 'yellow', 'green', 'blue', 'red', 'orange'];
-export const paint: Record<Color, string> = { white: '#f3f1e9', yellow: '#f1d34b', green: '#47956b', blue: '#4779bc', red: '#c65150', orange: '#e89746' };
+export const paint: Record<Color, string> = { white: '#ffffff', yellow: '#f1d34b', green: '#47956b', blue: '#4779bc', red: '#c65150', orange: '#e89746' };
 export const opposite: Record<Color, Color> = { white: 'yellow', yellow: 'white', green: 'blue', blue: 'green', red: 'orange', orange: 'red' };
 const vectors: Record<Color, Vec> = { white: [0,1,0], yellow: [0,-1,0], green: [0,0,1], blue: [0,0,-1], red: [1,0,0], orange: [-1,0,0] };
 const cross = (a: Vec, b: Vec): Vec => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];

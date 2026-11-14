@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
   import Cube from './Cube.svelte';
+  import FloatingPiece from './FloatingPiece.svelte';
   import Dropdown from './Dropdown.svelte';
-  import { pickTarget, type Mode } from '../lib/cube';
+  import { type Mode } from '../lib/cube';
+  import { pickPracticeTarget } from '../lib/buffers';
   import type { Settings } from '../lib/settings';
   import { isEditing } from '../lib/shortcuts';
-  let { settings, update, blocked }: { settings: Settings; update: (s: Settings) => void; blocked: boolean } = $props();
-  let target = $state(pickTarget(untrack(() => settings.mode)));
+  let { settings, update, blocked, exercise }: { settings: Settings; update: (s: Settings) => void; blocked: boolean; exercise: 'positions' | 'colors' } = $props();
+  let target = $state(pickPracticeTarget(untrack(() => settings)));
   let wrong = $state(false);
   let modeOpen = $state(false);
   let modeDropdown: Dropdown;
@@ -17,12 +19,13 @@
   let height = $state('100svh');
   let viewportTop = $state('0px');
   let ready = $state(false);
-  let lastMode = untrack(() => settings.mode);
-  $effect(() => { if (settings.mode !== lastMode) { lastMode = settings.mode; clearTimeout(timeout); wrong = false; feedback = ''; target = pickTarget(settings.mode, target.id); } });
+  const context = $derived([exercise, settings.mode, settings.top, settings.front, settings.hideBuffers, settings.edgeBuffer, settings.cornerBuffer].join(':'));
+  let lastContext = untrack(() => context);
+  $effect(() => { if (context !== lastContext) { lastContext = context; clearTimeout(timeout); wrong = false; feedback = ''; target = pickPracticeTarget(settings, target.id); } });
   function answer(value: string) {
     if (blocked || modeOpen || wrong || !/^[a-z]$/i.test(value)) return;
-    if (value.toUpperCase() === target.letter) { feedback = ''; target = pickTarget(settings.mode, target.id); }
-    else { wrong = true; feedback = `${target.letter}`; timeout = setTimeout(() => { target = pickTarget(settings.mode, target.id); wrong = false; feedback = ''; }, 850); }
+    if (value.toUpperCase() === target.letter) { feedback = ''; target = pickPracticeTarget(settings, target.id); }
+    else { wrong = true; feedback = `${target.letter}`; timeout = setTimeout(() => { target = pickPracticeTarget(settings, target.id); wrong = false; feedback = ''; }, 850); }
   }
   function entered(e: Event) {
     const el = e.currentTarget as HTMLInputElement;
@@ -49,9 +52,9 @@
   });
 </script>
 <svelte:window onkeydown={keydown} />
-<section class="trainer" style:--viewport={height} style:--viewport-top={viewportTop} aria-label="Blind lettering trainer">
-  <header><h1>Blind trainer</h1><div class="practice-select"><Dropdown bind:this={modeDropdown} label="Practice" compactMobile value={settings.mode} options={modes} bind:open={modeOpen} shortcut="Shift P" onchange={value => update({ ...settings, mode: value as Mode })} onclose={() => input?.focus({ preventScroll: true })} /></div></header>
-  <div class="stage">{#if ready}<Cube {target} {wrong} />{/if}</div>
+<section class="trainer" style:--viewport={height} style:--viewport-top={viewportTop} aria-label={exercise === 'colors' ? 'Blind color trainer' : 'Blind position trainer'}>
+  <header><h1>{exercise === 'colors' ? 'Colors' : 'Positions'}</h1><div class="practice-select"><Dropdown bind:this={modeDropdown} label="Practice" compactMobile value={settings.mode} options={modes} bind:open={modeOpen} shortcut="Shift P" onchange={value => update({ ...settings, mode: value as Mode })} onclose={() => input?.focus({ preventScroll: true })} /></div></header>
+  <div class="stage">{#if ready}{#if exercise === 'colors'}<FloatingPiece {target} top={settings.top} front={settings.front} {wrong} />{:else}<Cube {target} {wrong} />{/if}{/if}</div>
   <div class="answer-area">
     <div class="feedback" class:wrong aria-live="polite">{#if wrong}<span>Correct letter</span> <strong>{feedback}</strong>{/if}</div>
     <input data-trainer-input bind:this={input} aria-label="Type a letter" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck={false} oninput={entered} oncompositionend={entered} onkeydown={e => { if (e.repeat && /^[a-z]$/i.test(e.key)) e.preventDefault(); }} />

@@ -32,7 +32,7 @@
 </section>
 <style>
   .scramble-page { padding:clamp(110px, 24svh, 280px) 24px 40px; text-align:center; container-type:inline-size; }
-  .scramble { -webkit-tap-highlight-color:transparent; appearance:none; display:block; width:100%; border:0; padding:0; background:transparent; margin:0; font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
+  .scramble { font-family:var(--font-mono); -webkit-tap-highlight-color:transparent; appearance:none; display:block; width:100%; border:0; padding:0; background:transparent; margin:0; font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
   .counter { display:block; margin-top:24px; color:var(--muted); font-size:16px; }
   .error { font-size:18px; white-space:normal; }
   @media (max-width: 767px) { .scramble-page { position:relative; min-height:100svh; padding:clamp(90px, 18svh, 160px) 24px 32px; } .scramble::after { content:""; position:absolute; inset:0; } .scramble { white-space:normal; font-size:24px; overflow-wrap:normal; } }

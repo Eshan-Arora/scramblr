@@ -11,3 +11,5 @@
 - Sidebar arrow keys switch pages immediately while navigation has focus. Escape returns focus without closing the desktop sidebar. Cmd/Ctrl+K is an unadvertised fuzzy page switcher.
 - Use a fixed open-front cube outline with neutral walls. Shade the target face and show its grid and highlighted sticker; omit all other face grids. Do not show orientation color dots. On mobile, put practice selection behind a three-dot control, hide shortcut hints, and prioritize cube size. Do not detach or mirror faces or rotate between targets.
 - After browser viewport testing, clear device emulation before handing the preview back. Verify the final preview uses the actual desktop window width; never leave a phone-width override on the user’s desktop tab.
+
+- Blind contains Positions and Colors. Colors shows an isolated piece with all its colors visible and the target sticker outlined. Map colors to the home Speffz letter using the saved orientation; preserve corner handedness. Both trainers share rapid input, mode selection, feedback, and mobile layout.

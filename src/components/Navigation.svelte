@@ -17,6 +17,7 @@
 <nav bind:this={nav} aria-label="Main navigation">
   <span class="wordmark">scramblr</span>
   {#each pages as page}
+    {#if page.id === 'positions'}<span class="section-label">Blind</span>{/if}
     <button onkeydown={keydown} class:settings-link={page.id === 'settings'} class:chosen={current === page.id} aria-current={current === page.id ? 'page' : undefined} onclick={() => navigate(page.id)}>{page.label}{#if page.id === 'settings'}<kbd>{modifier},</kbd>{/if}</button>
   {/each}
 </nav>
@@ -26,6 +27,7 @@
   button { text-align:left; padding:12px; border:0; border-radius:5px; background:transparent; display:flex; align-items:center; justify-content:space-between; }
   button:hover { background:var(--subtle); }
   .chosen { color:var(--accent); background:var(--accent-soft); font-weight:700; }
+  .section-label { padding:24px 12px 6px; font-size:12px; color:var(--muted); }
   .settings-link { margin-top:auto; }
   kbd { font:12px var(--font); color:var(--muted); }
 </style>

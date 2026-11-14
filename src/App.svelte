@@ -20,12 +20,12 @@
   let modifier = $state('Ctrl+');
   let settings = $state<Settings>({ ...defaults });
   let storageFailed = $state(false);
-  let Trainer = $state<Component<{ settings: Settings; update: (s: Settings) => void; blocked: boolean }> | null>(null);
+  let Trainer = $state<Component<{ settings: Settings; update: (s: Settings) => void; blocked: boolean; exercise: 'positions' | 'colors' }> | null>(null);
   let loadFailed = $state(false);
   function update(s: Settings) { settings = s; storageFailed = !saveSettings(s); }
   function navigate(next: Page, keyboard = false) { page = next; window.location.hash = next === 'scramble' ? '' : next; if (mobile && !keyboard) sidebar = false; }
   async function loadTrainer() { try { loadFailed = false; Trainer = (await import('./components/Trainer.svelte')).default; } catch { loadFailed = true; } }
-  $effect(() => { if (page === 'blind' && !Trainer && !loadFailed) void loadTrainer(); });
+  $effect(() => { if ((page === 'positions' || page === 'colors') && !Trainer && !loadFailed) void loadTrainer(); });
   function keydown(e: KeyboardEvent) {
     const action = command(e);
     if (!action) return;
@@ -38,7 +38,7 @@
     settings = readSettings(); modifier = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl+';
     const media = matchMedia('(max-width: 767px)');
     const resize = () => { mobile = media.matches; sidebar = false; };
-    const route = () => { const value = location.hash.slice(1); page = value === 'blind' || value === 'settings' ? value : 'scramble'; };
+    const route = () => { const value = location.hash.slice(1); page = value === 'blind' ? 'positions' : value === 'positions' || value === 'colors' || value === 'settings' ? value : 'scramble'; };
     resize(); route(); media.addEventListener('change', resize); window.addEventListener('hashchange', route);
     return () => { media.removeEventListener('change', resize); window.removeEventListener('hashchange', route); };
   });
@@ -57,8 +57,8 @@
 <main bind:this={main} tabindex="-1" class:with-sidebar={sidebar && !mobile}>
   <div hidden={page !== 'scramble'}><Scramble active={page === 'scramble' && !(mobile && sidebar) && !switcher} /></div>
   {#if page === 'settings'}<SettingsPage {settings} {update} />{/if}
-  {#if page === 'blind'}
-    {#if Trainer}<Trainer {settings} {update} blocked={(mobile && sidebar) || switcher} />{:else}<div class="loading" role="status">{#if loadFailed}<button class="quiet" onclick={loadTrainer}>Retry loading trainer</button>{:else}Loading cube…{/if}</div>{/if}
+  {#if (page === 'positions' || page === 'colors')}
+    {#if Trainer}<Trainer {settings} {update} exercise={page === 'colors' ? 'colors' : 'positions'} blocked={(mobile && sidebar) || switcher} />{:else}<div class="loading" role="status">{#if loadFailed}<button class="quiet" onclick={loadTrainer}>Retry loading trainer</button>{:else}Loading cube…{/if}</div>{/if}
   {/if}
   {#if storageFailed}<p class="storage-error" role="status">Settings work for this visit, but couldn’t be saved.</p>{/if}
 </main>

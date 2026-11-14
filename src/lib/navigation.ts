@@ -1,13 +1,14 @@
-export type Page = 'scramble' | 'blind' | 'settings';
+export type Page = 'scramble' | 'positions' | 'colors' | 'settings';
 export const pages: { id: Page; label: string }[] = [
   { id: 'scramble', label: 'Scramble' },
-  { id: 'blind', label: 'Blind trainer' },
+  { id: 'positions', label: 'Positions' },
+  { id: 'colors', label: 'Colors' },
   { id: 'settings', label: 'Settings' },
 ];
 export function searchPages(query: string) {
   const needle = query.trim().toLowerCase();
   return pages.map(page => {
-    const text = page.label.toLowerCase();
+    const text = `${page.id === 'positions' || page.id === 'colors' ? 'blind ' : ''}${page.label}`.toLowerCase();
     let rank = 3;
     if (!needle || text.split(/\s+/).some(word => word.startsWith(needle))) rank = 0;
     else if (text.includes(needle)) rank = 1;
