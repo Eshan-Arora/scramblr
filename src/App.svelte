@@ -5,6 +5,7 @@
   import QuickSwitcher from './components/QuickSwitcher.svelte';
   import type { Page } from './lib/navigation';
   import Scramble from './components/Scramble.svelte';
+  import Timer from './components/Timer.svelte';
   import SettingsPage from './components/Settings.svelte';
   import { defaults, readSettings, saveSettings, type Settings } from './lib/settings';
   import { command } from './lib/shortcuts';
@@ -37,8 +38,8 @@
   onMount(() => {
     settings = readSettings(); modifier = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl+';
     const media = matchMedia('(max-width: 767px)');
-    const resize = () => { mobile = media.matches; sidebar = false; };
-    const route = () => { const value = location.hash.slice(1); page = value === 'blind' ? 'positions' : value === 'positions' || value === 'colors' || value === 'settings' ? value : 'scramble'; };
+    const resize = () => { mobile = media.matches; sidebar = !mobile; };
+    const route = () => { const value = location.hash.slice(1); page = value === 'blind' ? 'positions' : value === 'time' || value === 'positions' || value === 'colors' || value === 'settings' ? value : 'scramble'; };
     resize(); route(); media.addEventListener('change', resize); window.addEventListener('hashchange', route);
     return () => { media.removeEventListener('change', resize); window.removeEventListener('hashchange', route); };
   });
@@ -56,6 +57,7 @@
 {/if}
 <main bind:this={main} tabindex="-1" class:with-sidebar={sidebar && !mobile}>
   <div hidden={page !== 'scramble'}><Scramble active={page === 'scramble' && !(mobile && sidebar) && !switcher} /></div>
+  {#if page === 'time'}<Timer active={!(mobile && sidebar) && !switcher} />{/if}
   {#if page === 'settings'}<SettingsPage {settings} {update} />{/if}
   {#if (page === 'positions' || page === 'colors')}
     {#if Trainer}<Trainer {settings} {update} exercise={page === 'colors' ? 'colors' : 'positions'} blocked={(mobile && sidebar) || switcher} />{:else}<div class="loading" role="status">{#if loadFailed}<button class="quiet" onclick={loadTrainer}>Retry loading trainer</button>{:else}Loading cube…{/if}</div>{/if}

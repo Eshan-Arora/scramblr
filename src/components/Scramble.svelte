@@ -8,18 +8,27 @@
   let failed = $state(false);
   let busy = $state(true);
   let disposed = false;
-  let initialized = false;
+  const history: string[] = [];
+  let position = -1;
   let next: ReturnType<typeof prepareScramble>;
   async function advance() {
     if (busy || disposed || !active) return;
+    if (position + 1 < history.length) { scramble = history[++position]; count = position; failed = false; return; }
     busy = true;
     const result = await next;
     if (disposed) return;
     failed = Boolean(result.error);
-    if (result.text !== undefined) { scramble = result.text; if (initialized) count++; initialized = true; }
+    if (result.text !== undefined) { scramble = result.text; history.push(result.text); position = history.length - 1; count = position; }
     next = prepareScramble(); busy = false;
   }
+  function previous() {
+    if (!active || busy || position <= 0) return;
+    scramble = history[--position]; count = position; failed = false;
+  }
   function keydown(e: KeyboardEvent) {
+    if (active && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey && !isEditing(e.target) && !(e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],[role="combobox"]')) && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault(); if (e.key === 'ArrowLeft') previous(); else void advance(); return;
+    }
     if (!active || isEditing(e.target) || e.target instanceof HTMLButtonElement || e.code !== 'Space' || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
     e.preventDefault(); void advance();
   }

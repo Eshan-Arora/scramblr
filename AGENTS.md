@@ -13,3 +13,5 @@
 - After browser viewport testing, clear device emulation before handing the preview back. Verify the final preview uses the actual desktop window width; never leave a phone-width override on the user’s desktop tab.
 
 - Blind contains Positions and Colors. Colors shows an isolated piece with all its colors visible and the target sticker outlined. Map colors to the home Speffz letter using the saved orientation; preserve corner handedness. Both trainers share rapid input, mode selection, feedback, and mobile layout.
+
+- Desktop navigation starts open; mobile navigation starts closed. Time uses a 300 ms red-to-green hold, starts on release, and stops on the next Space press or touch. Keep the result visible while preparing the next scramble.

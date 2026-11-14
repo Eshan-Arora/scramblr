@@ -1,6 +1,7 @@
-export type Page = 'scramble' | 'positions' | 'colors' | 'settings';
+export type Page = 'scramble' | 'time' | 'positions' | 'colors' | 'settings';
 export const pages: { id: Page; label: string }[] = [
   { id: 'scramble', label: 'Scramble' },
+  { id: 'time', label: 'Time' },
   { id: 'positions', label: 'Positions' },
   { id: 'colors', label: 'Colors' },
   { id: 'settings', label: 'Settings' },
