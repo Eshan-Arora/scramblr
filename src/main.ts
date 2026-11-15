@@ -4,7 +4,9 @@ import './style.css';
 
 const target = document.getElementById('root');
 if (!target) throw new Error('Missing app root');
-mount(App, { target });
+if (import.meta.env.DEV && new URLSearchParams(location.search).has('mockups')) {
+  void import('./components/BlindMockups.svelte').then(({ default: Mockups }) => mount(Mockups, { target }));
+} else mount(App, { target });
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {

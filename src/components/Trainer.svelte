@@ -54,7 +54,7 @@
 <svelte:window onkeydown={keydown} />
 <section class="trainer" style:--viewport={height} style:--viewport-top={viewportTop} aria-label={exercise === 'colors' ? 'Blind color trainer' : 'Blind position trainer'}>
   <header><h1>{exercise === 'colors' ? 'Colors' : 'Positions'}</h1><div class="practice-select"><Dropdown bind:this={modeDropdown} label="Practice" compactMobile value={settings.mode} options={modes} bind:open={modeOpen} shortcut="Shift P" onchange={value => update({ ...settings, mode: value as Mode })} onclose={() => input?.focus({ preventScroll: true })} /></div></header>
-  <div class="stage">{#if ready}{#if exercise === 'colors'}<FloatingPiece {target} top={settings.top} front={settings.front} {wrong} />{:else}<Cube {target} {wrong} />{/if}{/if}</div>
+  <div class="stage">{#if ready}{#if exercise === 'colors'}<FloatingPiece {target} top={settings.top} front={settings.front} {wrong} />{:else}<Cube {target} {wrong} fadeRearEdges />{/if}{/if}</div>
   <div class="answer-area">
     <div class="feedback" class:wrong aria-live="polite">{#if wrong}<span>Correct letter</span> <strong>{feedback}</strong>{/if}</div>
     <input data-trainer-input bind:this={input} aria-label="Type a letter" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck={false} oninput={entered} oncompositionend={entered} onkeydown={e => { if (e.repeat && /^[a-z]$/i.test(e.key)) e.preventDefault(); }} />

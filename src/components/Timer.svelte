@@ -58,7 +58,7 @@
   function keydown(e: KeyboardEvent) {
     if (active && phase === 'running' && !e.repeat) { e.preventDefault(); cancelHold(); stop(); return; }
     if (e.key === 'Escape') { cancelHold(); return; }
-    if (!active || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.isComposing || isEditing(e.target) || (e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],button:not(.timer)'))) return;
+    if (!active || e.repeat || e.metaKey || e.ctrlKey || (e.altKey && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.isComposing || isEditing(e.target) || (e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],button:not(.timer)'))) return;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
       if (phase !== 'idle' || held || busy) return;
@@ -90,6 +90,7 @@
   .timer-page { position:relative; min-height:100svh; padding:clamp(110px, 24svh, 280px) 24px 40px; text-align:center; container-type:inline-size; }
   .scramble { margin:0; font-family:var(--font-mono); font-weight:700; line-height:1.7; white-space:nowrap; font-size:min(32px, calc(100cqw / (var(--characters) * .61))); }
   .timer { display:block; margin:32px auto 0; padding:12px 24px; border:0; background:transparent; font-family:var(--font); font-size:clamp(64px, 10vw, 112px); font-weight:700; font-variant-numeric:tabular-nums; line-height:1.2; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  .timer { cursor:default; }
   .timer::after { content:''; position:absolute; inset:0; }
   .timer:focus-visible { outline:none; }
   .holding { color:var(--error); } .ready { color:#24844c; }

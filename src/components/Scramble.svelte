@@ -26,7 +26,7 @@
     scramble = history[--position]; count = position; failed = false;
   }
   function keydown(e: KeyboardEvent) {
-    if (active && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey && !isEditing(e.target) && !(e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],[role="combobox"]')) && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    if (active && !e.repeat && !e.metaKey && !e.ctrlKey && !e.shiftKey && !isEditing(e.target) && !(e.target instanceof HTMLElement && e.target.closest('nav,[role="dialog"],[role="combobox"]')) && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
       e.preventDefault(); if (e.key === 'ArrowLeft') previous(); else void advance(); return;
     }
     if (!active || isEditing(e.target) || e.target instanceof HTMLButtonElement || e.code !== 'Space' || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;

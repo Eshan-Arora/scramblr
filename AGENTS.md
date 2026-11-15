@@ -15,3 +15,5 @@
 - Blind contains Positions and Colors. Colors shows an isolated piece with all its colors visible and the target sticker outlined. Map colors to the home Speffz letter using the saved orientation; preserve corner handedness. Both trainers share rapid input, mode selection, feedback, and mobile layout.
 
 - Desktop navigation starts open; mobile navigation starts closed. Time uses a 300 ms red-to-green hold, starts on release, and stops on the next Space press or touch. Keep the result visible while preparing the next scramble.
+
+- In Positions, all target faces use short dashes at 30% opacity for the three edges meeting at the rear-left-bottom corner. Apply the same treatment to overlapping target-face borders; keep the other nine cube edges solid.
