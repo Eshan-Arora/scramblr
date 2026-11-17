@@ -2,15 +2,12 @@
 - persist times and settings
  - requires login (email sign in code infinite session length?)
  - sessions
-   - good session picker
+   - good session picker: sort by scramble or time
 - inspection
   - other cstimer settings like timer update
 - cstimer import
 - draw scramble
 - different cube scrambles
-
-# trainer
--  
 
 extra
 - typing input
