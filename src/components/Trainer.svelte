@@ -6,26 +6,26 @@
   import { type Mode } from '../lib/cube';
   import { pickPracticeTarget } from '../lib/buffers';
   import type { Settings } from '../lib/settings';
+  import { schemeLetter } from '../lib/letter-scheme';
   import { isEditing } from '../lib/shortcuts';
   let { settings, update, blocked, exercise }: { settings: Settings; update: (s: Settings) => void; blocked: boolean; exercise: 'positions' | 'colors' } = $props();
   let target = $state(pickPracticeTarget(untrack(() => settings)));
-  let wrong = $state(false);
+  let wrongCount = $state(0);
+  const wrong = $derived(wrongCount > 0);
   let modeOpen = $state(false);
   let modeDropdown: Dropdown;
   const modes = [{ value: 'edges', label: 'Edges' }, { value: 'corners', label: 'Corners' }, { value: 'mixed', label: 'Mixed' }];
-  let feedback = $state('');
   let input: HTMLInputElement;
-  let timeout: ReturnType<typeof setTimeout>;
   let height = $state('100svh');
   let viewportTop = $state('0px');
   let ready = $state(false);
-  const context = $derived([exercise, settings.mode, settings.top, settings.front, settings.hideBuffers, settings.edgeBuffer, settings.cornerBuffer].join(':'));
+  const context = $derived([exercise, settings.mode, settings.top, settings.front, settings.hideBuffers, settings.edgeBuffer, settings.cornerBuffer, settings.letterScheme, JSON.stringify(settings.customScheme)].join(':'));
   let lastContext = untrack(() => context);
-  $effect(() => { if (context !== lastContext) { lastContext = context; clearTimeout(timeout); wrong = false; feedback = ''; target = pickPracticeTarget(settings, target.id); } });
+  $effect(() => { if (context !== lastContext) { lastContext = context; wrongCount = 0; target = pickPracticeTarget(settings, target.id); } });
   function answer(value: string) {
-    if (blocked || modeOpen || wrong || !/^[a-z]$/i.test(value)) return;
-    if (value.toUpperCase() === target.letter) { feedback = ''; target = pickPracticeTarget(settings, target.id); }
-    else { wrong = true; feedback = `${target.letter}`; timeout = setTimeout(() => { target = pickPracticeTarget(settings, target.id); wrong = false; feedback = ''; }, 850); }
+    if (blocked || modeOpen || !/^[a-z]$/i.test(value)) return;
+    if (value.toUpperCase() === schemeLetter(target, settings)) { wrongCount = 0; target = pickPracticeTarget(settings, target.id); }
+    else { wrongCount += 1; }
   }
   function entered(e: Event) {
     const el = e.currentTarget as HTMLInputElement;
@@ -48,7 +48,7 @@
       document.documentElement.style.setProperty('--trainer-viewport-top', viewportTop);
     };
     resize(); viewport?.addEventListener('resize', resize); viewport?.addEventListener('scroll', resize); window.addEventListener('resize', resize); ready = true;
-    return () => { clearTimeout(timeout); viewport?.removeEventListener('resize', resize); viewport?.removeEventListener('scroll', resize); document.documentElement.style.removeProperty('--trainer-viewport-top'); window.removeEventListener('resize', resize); };
+    return () => { viewport?.removeEventListener('resize', resize); viewport?.removeEventListener('scroll', resize); document.documentElement.style.removeProperty('--trainer-viewport-top'); window.removeEventListener('resize', resize); };
   });
 </script>
 <svelte:window onkeydown={keydown} />
@@ -56,7 +56,7 @@
   <header><h1>{exercise === 'colors' ? 'Colors' : 'Positions'}</h1><div class="practice-select"><Dropdown bind:this={modeDropdown} label="Practice" compactMobile value={settings.mode} options={modes} bind:open={modeOpen} shortcut="Shift P" onchange={value => update({ ...settings, mode: value as Mode })} onclose={() => input?.focus({ preventScroll: true })} /></div></header>
   <div class="stage">{#if ready}{#if exercise === 'colors'}<FloatingPiece {target} top={settings.top} front={settings.front} {wrong} />{:else}<Cube {target} {wrong} fadeRearEdges />{/if}{/if}</div>
   <div class="answer-area">
-    <div class="feedback" class:wrong aria-live="polite">{#if wrong}<span>Correct letter</span> <strong>{feedback}</strong>{/if}</div>
+    <div class="feedback" class:wrong style:--wrong-size={`${24 + (wrongCount - 1) * 8}px`} role="status" aria-live="polite">{#if wrong}<strong>wrong</strong>{/if}</div>
     <input data-trainer-input bind:this={input} aria-label="Type a letter" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck={false} oninput={entered} oncompositionend={entered} onkeydown={e => { if (e.repeat && /^[a-z]$/i.test(e.key)) e.preventDefault(); }} />
   </div>
 </section>
@@ -67,7 +67,7 @@
   .stage { flex:1; min-height:150px; }
   .answer-area { position:relative; flex-shrink:0; text-align:center; padding-bottom:env(safe-area-inset-bottom); }
   .feedback { position:absolute; bottom:100%; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:14px; min-height:36px; font-size:14px; }
-  .feedback.wrong { color:var(--error); } strong { font-size:28px; }
+  .feedback.wrong { color:var(--error); } strong { font-size:min(var(--wrong-size), 22vw, calc(var(--viewport) * .18)); line-height:1.1; }
   input { display:block; margin:8px auto 0; text-align:center; width:180px; font-size:16px; background:var(--surface); }
   @media (max-width:767px) {
     .trainer { position:fixed; top:var(--viewport-top); left:0; right:0; width:100%; min-height:0; max-height:none; padding:60px 12px 12px; overflow:hidden; }

@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
+  // Keep solver worker URLs relative to cubing's original modules in development.
+  optimizeDeps: { exclude: ['cubing'] },
   plugins: [svelte(), {
     name: 'offline',
     apply: 'build',

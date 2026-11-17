@@ -1,0 +1,24 @@
+# timer
+- persist times and settings
+ - requires login (email sign in code infinite session length?)
+ - sessions
+   - good session picker
+- inspection
+  - other cstimer settings like timer update
+- cstimer import
+- draw scramble
+- different cube scrambles
+
+# trainer
+-  
+
+extra
+- typing input
+- session agnostic prs (cross-session statistics)
+- animation on pb
+  - super big one on overall pb
+- multiphase timer
+
+extra extra 
+- stackmat
+- smart cubes

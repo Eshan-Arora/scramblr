@@ -7,13 +7,15 @@
 - Verify important flows on narrow and wide viewports, with keyboard and touch input. Include mobile keyboard behavior in verification.
 - Keep README.md limited to `scramblr`. Keep product and development guidance here instead of adding prose documentation.
 - Desktop scrambles stay on one line; mobile scrambles wrap at a readable size.
-- The blind trainer quizzes solved-cube sticker positions using Speffz, with configurable orientation (default yellow U / blue F). Correct answers advance immediately; wrong answers reveal the letter briefly before advancing. No stats for now.
+- The blind trainer quizzes solved-cube sticker positions using the selected letter scheme (Speffz by default, with a custom cube-net editor in Settings), with configurable orientation (default yellow U / blue F). Correct answers advance immediately; wrong answers show red “wrong” feedback and keep the target until answered correctly. Each consecutive wrong answer enlarges the feedback; a correct answer or practice context change resets it. No stats for now.
 - Sidebar arrow keys switch pages immediately while navigation has focus. Escape returns focus without closing the desktop sidebar. Cmd/Ctrl+K is an unadvertised fuzzy page switcher.
 - Use a fixed open-front cube outline with neutral walls. Shade the target face and show its grid and highlighted sticker; omit all other face grids. Do not show orientation color dots. On mobile, put practice selection behind a three-dot control, hide shortcut hints, and prioritize cube size. Do not detach or mirror faces or rotate between targets.
 - After browser viewport testing, clear device emulation before handing the preview back. Verify the final preview uses the actual desktop window width; never leave a phone-width override on the user’s desktop tab.
 
-- Blind contains Positions and Colors. Colors shows an isolated piece with all its colors visible and the target sticker outlined. Map colors to the home Speffz letter using the saved orientation; preserve corner handedness. Both trainers share rapid input, mode selection, feedback, and mobile layout.
+- Blind contains Positions and Colors. Colors shows an isolated piece with all its colors visible and the target sticker outlined. Map colors to the home letter in the selected scheme using the saved orientation; preserve corner handedness. Both trainers share rapid input, mode selection, feedback, and mobile layout.
 
 - Desktop navigation starts open; mobile navigation starts closed. Time uses a 300 ms red-to-green hold, starts on release, and stops on the next Space press or touch. Keep the result visible while preparing the next scramble.
 
 - In Positions, all target faces use short dashes at 30% opacity for the three edges meeting at the rear-left-bottom corner. Apply the same treatment to overlapping target-face borders; keep the other nine cube edges solid.
+
+- Settings opens with its search field focused. `/` focuses search while on Settings unless another text field is being edited. Search filters letter scheme, orientation, and buffer controls.
