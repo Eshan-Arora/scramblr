@@ -12,10 +12,9 @@
   let page = $state<Page>('scramble');
   let sidebar = $state(false);
   let switcher = $state(false);
-  let navigation = $state<Navigation>();
   let main: HTMLElement;
   function focusPage() { (main.querySelector<HTMLElement>('[data-trainer-input]') ?? main).focus({ preventScroll: true }); }
-  async function toggleSidebar() { sidebar = !sidebar; await tick(); if (sidebar) navigation?.focus(); else focusPage(); }
+  async function toggleSidebar() { sidebar = !sidebar; await tick(); if (!mobile || !sidebar) focusPage(); }
   async function closeSwitcher() { switcher = false; await tick(); focusPage(); }
   let mobile = $state(false);
   let modifier = $state('Ctrl+');
@@ -50,11 +49,11 @@
 {#if mobile}
   <Dialog.Root bind:open={sidebar}>
     <Dialog.Trigger class="menu-toggle" aria-label="Open sidebar">{@render menuIcon()}</Dialog.Trigger>
-    <Dialog.Portal><Dialog.Overlay class="drawer-overlay" /><Dialog.Content class="drawer" onEscapeKeydown={e => e.preventDefault()}><Dialog.Title class="sr-only">Navigation</Dialog.Title><Dialog.Description class="sr-only">Choose a page</Dialog.Description><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /><Dialog.Close class="drawer-close" aria-label="Close sidebar">{@render collapseIcon()}</Dialog.Close></Dialog.Content></Dialog.Portal>
+    <Dialog.Portal><Dialog.Overlay class="drawer-overlay" /><Dialog.Content class="drawer" onEscapeKeydown={e => e.preventDefault()}><Dialog.Title class="sr-only">Navigation</Dialog.Title><Dialog.Description class="sr-only">Choose a page</Dialog.Description><Navigation current={page} {navigate} {modifier} leave={focusPage} /><Dialog.Close class="drawer-close" aria-label="Close sidebar">{@render collapseIcon()}</Dialog.Close></Dialog.Content></Dialog.Portal>
   </Dialog.Root>
 {:else}
   {#if sidebar}
-    <aside><button class="drawer-close" aria-label="Close sidebar" aria-expanded="true" title={`${modifier}B`} onclick={toggleSidebar}>{@render collapseIcon()}</button><Navigation bind:this={navigation} current={page} {navigate} {modifier} leave={focusPage} /></aside>
+    <aside><button class="drawer-close" aria-label="Close sidebar" aria-expanded="true" title={`${modifier}B`} onclick={toggleSidebar}>{@render collapseIcon()}</button><Navigation current={page} {navigate} {modifier} leave={focusPage} /></aside>
   {:else}
     <button class="menu-toggle" aria-label="Open sidebar" aria-expanded="false" title={`${modifier}B`} onclick={toggleSidebar}>{@render menuIcon()}</button>
   {/if}

@@ -2,7 +2,6 @@
   import { pages, type Page } from '../lib/navigation';
   let { current, navigate, modifier, leave }: { current: Page; navigate: (page: Page, keyboard?: boolean) => void; modifier: string; leave: () => void } = $props();
   let nav: HTMLElement;
-  export function focus() { nav.querySelector<HTMLButtonElement>('[aria-current="page"]')?.focus(); }
   function keydown(e: KeyboardEvent) {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); leave(); return; }

@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
+  // Filesystem notifications can miss edits made through the agent workspace.
+  server: { watch: { usePolling: true, interval: 250 } },
   // Keep solver worker URLs relative to cubing's original modules in development.
   optimizeDeps: { exclude: ['cubing'] },
   plugins: [svelte(), {

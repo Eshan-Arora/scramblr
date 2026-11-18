@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { isEditing } from '../lib/shortcuts';
+  import { fuzzyRank } from '../lib/search';
   import LetterSchemeEditor from './LetterSchemeEditor.svelte';
   import { speffzScheme, type LetterScheme } from '../lib/letter-scheme';
   import { colors, opposite, type Color } from '../lib/cube';
@@ -11,7 +12,7 @@
   let search = $state('');
   let searchInput: HTMLInputElement;
   const terms = $derived(search.toLowerCase().trim().split(/\s+/).filter(Boolean));
-  const matches = (text: string) => terms.every(term => text.toLowerCase().includes(term));
+  const matches = (text: string) => terms.every(term => fuzzyRank(text, term) < 3);
   const showScheme = $derived(matches('blind letter letters scheme schemes speffz custom configure configuration alphabet positions colors edges corners stickers'));
   const showOrientation = $derived(matches('blind solving orientation top front color yellow blue white green red orange'));
   const showBuffers = $derived(matches('blind hide buffer buffers pieces edge edges corner corners positions colors'));

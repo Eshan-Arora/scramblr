@@ -8,6 +8,7 @@
 - cstimer import
 - draw scramble
 - different cube scrambles
+- copy scramble
 
 extra
 - typing input
